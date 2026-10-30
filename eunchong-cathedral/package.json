@@ -1,0 +1,12 @@
+{
+  "name": "eunchong-cathedral",
+  "version": "1.0.0",
+  "description": "은총성당 - 3D 가상 성당 (함께 접속, 초 봉헌 공유)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}
