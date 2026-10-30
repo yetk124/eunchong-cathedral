@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const express = require('express');
+const compression = require('compression');
 const { Server } = require('socket.io');
 
 const PORT = process.env.PORT || 3000;
@@ -24,7 +25,11 @@ setInterval(() => { if (!dirty) return; dirty = false; fs.writeFile(DATA_FILE, J
 
 // ---- 정적 파일 ----
 app.disable('x-powered-by');
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d', setHeaders: (res, p) => { if (p.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache'); } }));
+app.use(compression({ threshold: 1024 }));   // 글자 파일(html/js/css)을 gzip으로 압축해서 보내요
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '30d', setHeaders: (res, p) => {
+  if (p.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache');            // 앱 본문은 매번 최신 확인
+  else if (p.includes(path.sep + 'vendor' + path.sep)) res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 라이브러리는 1년 캐시
+} }));
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 app.get('/api/rooms', (req, res) => { rollDay(); res.json({ counts: counts(), candlesToday: data.candles, totalCandles: data.totalCandles }); });
 

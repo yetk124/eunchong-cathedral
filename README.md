@@ -52,3 +52,9 @@ npm start
   계속 남기려면 Render의 유료 Disk를 붙이거나(환경변수 `DATA_FILE=/var/data/data.json`), Render Postgres 같은 DB를 연결하면 돼요.
 - 서버 없이 `public/index.html`만 열어도 혼자 모드로 그대로 동작해요.
 - 성가 mp3의 저작권을 확인해 주세요. 문 소리는 김용배, 「성당 나무문 열고 닫는2」(공유마당, CC BY)예요.
+
+## 속도 최적화 (적용됨)
+- 3D 라이브러리를 `public/vendor/three-bundle.js` 하나로 합쳐 같은 서버에서 제공 (외부 CDN 대기 없음, 1년 캐시)
+- `index.html` 코드 압축 + 서버 gzip 압축 (`compression`)
+- 텍스처는 WebP, 성가 mp3는 가볍게
+- **무료 서버 잠들기 방지:** https://cron-job.org 같은 무료 서비스에서 `https://내주소.onrender.com/api/health` 를 10분마다 호출하게 등록하면 첫 접속 30~60초 대기가 사라져요.
